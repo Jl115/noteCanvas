@@ -25,6 +25,7 @@ struct HomeView: View {
         NavigationSplitView {
             categoryList
         } detail: {
+
             NotesView(category: selecdTag)
                 .navigationTitle(selecdTag ?? "Note Canvas")
                 .toolbar {
@@ -42,7 +43,6 @@ struct HomeView: View {
                 }
                 .preferredColorScheme(isDarkMode ? .dark : .light)
         }
-
         .alert("Add Category", isPresented: $addCategory) {
             TextField("Category Title", text: $categoryTitle)
             Button("Add", action: addNewCategory)

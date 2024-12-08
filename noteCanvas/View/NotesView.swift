@@ -32,34 +32,39 @@ struct NotesView: View {
 
     @FocusState private var isKeyboard: Bool
     var body: some View {
-        GeometryReader { geometry in
-            let size = geometry.size
-            let width = size.width
+        NavigationStack {
+            GeometryReader { geometry in
+                let size = geometry.size
+                let width = size.width
 
-            let rowCount = max(Int(width / 250), 1)
+                let rowCount = max(Int(width / 250), 1)
 
-            ScrollView(.vertical) {
-                LazyVGrid(
-                    columns: Array(repeating: GridItem(spacing: 10), count: rowCount), spacing: 10
-                ) {
-                    ForEach(notes) { note in
-                        noteCardView(note: note, isKeyboardEnabled: $isKeyboard)
-                            .contextMenu {
-                                Button("Delete note") {
-                                    context.delete(note)
-                                }
+                ScrollView(.vertical) {
+                    LazyVGrid(
+                        columns: Array(repeating: GridItem(spacing: 10), count: rowCount), spacing: 10
+                    ) {
+                        ForEach(notes) { note in
+                            NavigationLink(destination: NoteEditorView(note: note)) {
+                                noteCardView(note: note, isKeyboardEnabled: $isKeyboard)
+                                    .contextMenu {
+                                        Button("Delete note") {
+                                            context.delete(note)
+                                            print("Deleted note: \(note)")
+                                        }
+                                    }
                             }
+                        }
                     }
+                    .padding(12)
                 }
-                .padding(12)
-            }
-
-            .onTapGesture {
-                isKeyboard = false
+                .onTapGesture {
+                    isKeyboard = false
+                }
             }
         }
     }
 }
+
 
 struct noteCardView: View {
     @Bindable var note: Note
